@@ -19,7 +19,11 @@ namespace WebHostTest
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            
+                .ConfigureAppConfiguration(c =>
+                {
+                    c.AddJsonFile("settings.json");
+                    c.AddCommandLine(args);
+                })
                 .UseStartup<Startup>()
                 .Build();
     }

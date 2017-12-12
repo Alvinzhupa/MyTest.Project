@@ -34,8 +34,8 @@ namespace FirstCodeFirstApp
     {
         static void Main(string[] args)
         {
-
-            TestDelegate.doV(c => c.Id == 1);
+            TestDelegate td = new TestDelegate();
+            td.doV(c => c.Id = 1);
 
             //.WriteLine("DB create");
             Console.Read();

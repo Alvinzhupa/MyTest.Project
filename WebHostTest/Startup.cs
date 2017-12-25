@@ -30,7 +30,7 @@ namespace WebHostTest
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration configuration, IApplicationLifetime lifetime)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,7 +56,11 @@ namespace WebHostTest
                     await next(context);//如果这一步不返回,那么后续的管道将不会执行
                 };
             });
-            
+
+            app.UseRouter(c => c.MapGet("action2", async context =>
+             {
+                 await context.Response.WriteAsync("actionre2");
+             }));
 
             app.Run(async (context) =>
             {

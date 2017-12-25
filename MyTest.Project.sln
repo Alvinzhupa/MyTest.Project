@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstCodeFirstApp", "FirstC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebHostTest", "WebHostTest\WebHostTest.csproj", "{A872622E-F72A-4B3C-8770-2D1DC3ADAE31}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcCookieAuthSample", "MvcCookieAuthSample\MvcCookieAuthSample.csproj", "{CDB75514-0256-49FF-A5CC-67F30A1403D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A872622E-F72A-4B3C-8770-2D1DC3ADAE31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A872622E-F72A-4B3C-8770-2D1DC3ADAE31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A872622E-F72A-4B3C-8770-2D1DC3ADAE31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDB75514-0256-49FF-A5CC-67F30A1403D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDB75514-0256-49FF-A5CC-67F30A1403D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDB75514-0256-49FF-A5CC-67F30A1403D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDB75514-0256-49FF-A5CC-67F30A1403D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

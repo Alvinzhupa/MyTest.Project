@@ -31,7 +31,7 @@ namespace JwtAuthSample
             //1.添加验证配置
 
             //在appSettings的配置中要设置好,这个配置需要在第一级中
-            services.Configure<JwtSettings>(Configuration);//注册并注入
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));//注册并注入
 
             var jwtSettings = new JwtSettings();
             Configuration.Bind("JwtSettings", jwtSettings); //绑定实例

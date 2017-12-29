@@ -71,5 +71,6 @@ namespace JwtAuthSample.Controllers
 
             return BadRequest();
         }
+
     }
 }

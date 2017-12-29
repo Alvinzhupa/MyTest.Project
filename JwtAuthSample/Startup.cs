@@ -44,11 +44,26 @@ namespace JwtAuthSample
             })
             .AddJwtBearer(o =>
             {
-                o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                //o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                //{
+                //    ValidIssuer = jwtSettings.Issuer,
+                //    ValidAudience = jwtSettings.Audience,
+                //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)) //对称加密
+                //};
+
+                //以下两步是修改 token验证的方式
+                o.SecurityTokenValidators.Clear();//清楚验证数组
+                o.SecurityTokenValidators.Add(new MyTokenValidator()); //添加验证方式
+
+                o.Events = new JwtBearerEvents()
                 {
-                    ValidIssuer = jwtSettings.Issuer,
-                    ValidAudience = jwtSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)) //对称加密
+                    //这里是修改获取token的方式
+                    OnMessageReceived = (context =>
+                    {
+                        var token = context.Request.Headers["mytoken"];
+                        context.Token = token.FirstOrDefault();
+                        return Task.CompletedTask;
+                    })
                 };
             });
 

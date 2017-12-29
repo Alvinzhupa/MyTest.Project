@@ -1,0 +1,45 @@
+﻿<html>
+<head>
+    <meta name="layout" content="main">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/t.js"></script>
+
+</head>
+<body>
+    <div id="capture" style="padding: 10px; background: #f5da55">
+        <h4 style="color: #000; ">Hello world!</h4>
+        <img src="http://pan.baidu.com/share/qrcode?w=150&h=150&url=html2canvas.hertzen.com/dist/html2canvas.js" />
+
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWAQAAAAAUekxPAAABHElEQVRIie2VS47EIAxELflalnx1S1zLElMFk/T09C7FsslH4S1i4yqMzc9hX6ayMvPOzjLnp8wG7grOxlgzlZWPNgRp5+cRVhEWlscY0h2owRk2SdoQ4q0uTxmFGXu86faU7YF/d/7z1TO2vIM7siMiZQYKeVhbs1fOz9mWHDaf7XfOCkOeBYEm0z7AaG6s3kj610MSw5YJp4vwbpcZUoUfO5B149FZQiNuF/y/Lh8IDFlD8mKUO4bCyosNJ7H+8msPCgwO8uVHZ+5TZ8vlyQr4VQOJja36PgVcZqtDjEI5cbXO2Li2QihFTpntxroVYiSZsUms4/NPXVSW+2hpO8TQIYJHXqXOVnvNoos6dLZWH5zH7XGFfYwv09gPahvpEHXW0lMAAAAASUVORK5CYII=" />
+    </div>：
+
+</body>
+
+<script type="text/javascript">
+    function loadImage(url, callback) {
+        var img = new Image(); //创建一个Image对象，实现图片的预下载
+        img.src = url;
+
+        if (img.complete) { // 如果图片已经存在于浏览器缓存，直接调用回调函数
+            callback.call(img);
+            return; // 直接返回，不用再处理onload事件
+        }
+        img.onload = function () { //图片下载完毕时异步调用callback函数。
+            callback.call(img);//将回调函数的this替换为Image对象
+        };
+    };
+
+    loadImage("http://source.ujinbi.com/UpLoadFile/guanggao/201712011207373555.jpg", function () {
+        html2canvas(document.querySelector("#capture")).then(function (canvas) {
+            var d = $(canvas);
+            document.body.appendChild(canvas)
+        });
+    });
+
+
+
+
+</script>
+
+</html>

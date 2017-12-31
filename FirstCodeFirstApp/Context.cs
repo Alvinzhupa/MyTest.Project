@@ -7,12 +7,12 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Collections;
 namespace FirstCodeFirstApp
 {
     public class Context : DbContext
     {
-        public Context() : base("name=FirstCodeFirstApp")
+        public Context () : base ("name=FirstCodeFirstApp")
         {
 
         }
@@ -21,8 +21,7 @@ namespace FirstCodeFirstApp
         //public DbSet<PayWay> PayWays { get; set; }
         //public DbSet<DonatorType> DonatorTypes { get; set; }
 
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating (DbModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Donator>().ToTable("Donatores").HasKey(m => m.DonatorId);//映射到表Donators,DonatorId当作主键对待
             //modelBuilder.Entity<Donator>().Property(m => m.DonatorId).HasColumnName("Id");//映射到数据表中的主键名为Id而不是DonatorId
@@ -33,34 +32,81 @@ namespace FirstCodeFirstApp
 
             //modelBuilder.Entity<Donator>().HasRequired<Province>(c => c.Province).WithMany(c => c.Donators).HasForeignKey(c=>c.PId);
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating (modelBuilder);
         }
-        public virtual DbSet<Donator> Donators { get; set; }
-        public virtual DbSet<Province> Provinces { get; set; }
+        public virtual DbSet<Donator> Donators
+        {
+            get;
+            set;
+        }
+        public virtual DbSet<Province> Provinces
+        {
+            get;
+            set;
+        }
     }
 
     public class Donator
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime DonateDate { get; set; }
+        public int Id
+        {
+            get;
+            set;
+        }
+        public string Name
+        {
+            get;
+            set;
+        }
+        public decimal Amount
+        {
+            get;
+            set;
+        }
+        public DateTime DonateDate
+        {
+            get;
+            set;
+        }
 
-        public virtual Province Province { get; set; }//新增字段
+        public virtual Province Province
+        {
+            get;
+            set;
+        } //新增字段
     }
 
     public class Province
     {
-        public Province()
+        public Province ()
         {
-            Donators = new HashSet<Donator>();
+            //Donators = new  HashSet<Donator> ();
         }
 
-        public int Id { get; set; }
-        [StringLength(100)]
-        public string ProvinceName { get; set; }
+        public Province (int id, string provinceName)
+        {
+            this.Id = id;
+            this.ProvinceName = provinceName;
 
-        public virtual ICollection<Donator> Donators { get; set; }
+        }
+        public int Id
+        {
+            get;
+            set;
+        }
+
+        [StringLength (100)]
+        public string ProvinceName
+        {
+            get;
+            set;
+        }
+
+        public virtual ICollection<Donator> Donators
+        {
+            get;
+            set;
+        }
     }
 
     //public class Person
@@ -83,28 +129,9 @@ namespace FirstCodeFirstApp
     //    public decimal HourlyRate { get; set; }
     //}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public class Initializer : DropCreateDatabaseAlways<Context>
     {
 
     }
-
 
 }

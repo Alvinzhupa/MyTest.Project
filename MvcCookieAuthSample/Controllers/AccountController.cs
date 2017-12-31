@@ -14,6 +14,20 @@ namespace MvcCookieAuthSample.Controllers
 {
     public class AccountController : Controller
     {
+
+        public IActionResult Login()
+        {
+
+            return View();
+        }
+
+  
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+
         public IActionResult MakeLogin()
         {
             //3.指定验证成功的方式
@@ -58,12 +72,12 @@ namespace MvcCookieAuthSample.Controllers
 
             //var bytes = StreamToBytes(s);
             string base64 = Convert.ToBase64String(mybyte);
-      
+
 
             return Ok("<img src='" + base64 + "'>");
         }
 
-    
+
     }
 
 

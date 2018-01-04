@@ -9,11 +9,22 @@ using System.Security.Claims;
 using System.Net;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using MvcCookieAuthSample.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using MvcCookieAuthSample.Models;
 
 namespace MvcCookieAuthSample.Controllers
 {
     public class AccountController : Controller
     {
+        private UserManager<ApplicationUser> _userManager;//用户创建的管理对象
+        private SignInManager<ApplicationUser> _signInManager;//注册的对象
+
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
 
         public IActionResult Login()
         {
@@ -21,13 +32,29 @@ namespace MvcCookieAuthSample.Controllers
             return View();
         }
 
-  
+
         public IActionResult Register()
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            ApplicationUser applicationUser = new ApplicationUser()
+            {
+                Email = registerViewModel.Email,
+                UserName = registerViewModel.Email,
+                NormalizedUserName = registerViewModel.Email
+            };
 
+            IdentityResult identityResult = await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
+            if (identityResult.Succeeded)
+            {
+                return RedirectToAction("Home","Index");
+            }
 
+            return View();
+        }
         public IActionResult MakeLogin()
         {
             //3.指定验证成功的方式

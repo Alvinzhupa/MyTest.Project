@@ -18,7 +18,19 @@ namespace MvcCookieAuthSample.Controllers
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> _userManager;//用户创建的管理对象
-        private SignInManager<ApplicationUser> _signInManager;//注册的对象
+        private SignInManager<ApplicationUser> _signInManager;//登录管理的对象
+
+        private IActionResult RedirectToRurl(string returnUrl)
+        {
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return Redirect(returnUrl);
+            }
+        }
 
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
@@ -26,19 +38,34 @@ namespace MvcCookieAuthSample.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-
-        public IActionResult Register()
+        [HttpPost]
+        public async Task<IActionResult> Login(RegisterViewModel loginModel, string returnUrl)
         {
+
+            ApplicationUser applicationUser = await _userManager.FindByNameAsync(loginModel.Email);
+            if (applicationUser == null)
+            {
+
+            }
+            await _signInManager.SignInAsync(applicationUser, new AuthenticationProperties() { IsPersistent = true });
+
+            return RedirectToRurl(returnUrl);
+            
+        }
+        
+        public IActionResult Register(string returnUrl1)
+        {
+            ViewData["ReturnUrl"] = returnUrl1;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel,string returnUrl)
         {
             ApplicationUser applicationUser = new ApplicationUser()
             {
@@ -50,7 +77,8 @@ namespace MvcCookieAuthSample.Controllers
             IdentityResult identityResult = await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
             if (identityResult.Succeeded)
             {
-                return RedirectToAction("Home","Index");
+                await _signInManager.SignInAsync(applicationUser, new AuthenticationProperties() { IsPersistent = true });
+                return RedirectToRurl(returnUrl);
             }
 
             return View();
@@ -78,30 +106,9 @@ namespace MvcCookieAuthSample.Controllers
 
         public IActionResult LoginOut()
         {
+            _signInManager.SignOutAsync();
 
-            //4.登出的方法
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            return Ok();
-        }
-
-        public IActionResult ImgDown()
-        {
-            WebClient my = new WebClient();
-            byte[] mybyte;
-            mybyte = my.DownloadData("http://pan.baidu.com/share/qrcode?w=150&h=150&url=html2canvas.hertzen.com/dist/html2canvas.js");
-            //var ms = new MemoryStream(mybyte);
-            // System.Drawing.Image img;
-            // img = System.Drawing.Image.FromStream(ms);
-            //ms.GetBuffer();
-            // img.Save("D:\\a.gif", ImageFormat.Gif);   //保存
-
-
-            //var bytes = StreamToBytes(s);
-            string base64 = Convert.ToBase64String(mybyte);
-
-
-            return Ok("<img src='" + base64 + "'>");
+            return RedirectToAction("index", "home");
         }
 
 

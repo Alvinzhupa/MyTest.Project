@@ -46,7 +46,6 @@ namespace MvcCookieAuthSample
 
             services.Configure<IdentityOptions>(config =>
             {
-                config.Password.RequiredLength = 8;
                 config.Password.RequireUppercase = false;
                 config.Password.RequireLowercase = false;
                 config.Password.RequireDigit = false;

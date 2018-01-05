@@ -32,6 +32,14 @@ namespace MvcCookieAuthSample.Controllers
             }
         }
 
+        private void ShowErrorSummary(IdentityResult identityResult)
+        {
+            foreach (var error in identityResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
@@ -45,44 +53,66 @@ namespace MvcCookieAuthSample.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(RegisterViewModel loginModel, string returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel loginModel, string returnUrl)
         {
-
-            ApplicationUser applicationUser = await _userManager.FindByNameAsync(loginModel.Email);
-            if (applicationUser == null)
+            if (ModelState.IsValid)
             {
+                ApplicationUser applicationUser = await _userManager.FindByNameAsync(loginModel.Email);
 
+                var passwordReuslt = _userManager.PasswordHasher.VerifyHashedPassword(applicationUser, applicationUser.PasswordHash, loginModel.Password);//用来验证密码正确性,返回值是一个enum
+
+                if (applicationUser == null)
+                {
+                    ModelState.AddModelError(string.Empty, "找不到用户");
+                    return View();
+                }
+                var signInResult = await _signInManager.PasswordSignInAsync(applicationUser, loginModel.Password, false, false);//也可以用来验证密码
+                if (signInResult.Succeeded)
+                {
+                    return RedirectToRurl(returnUrl);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "不知道啥原因");
+                }
             }
-            await _signInManager.SignInAsync(applicationUser, new AuthenticationProperties() { IsPersistent = true });
-
-            return RedirectToRurl(returnUrl);
-            
+            return View();
         }
-        
+
         public IActionResult Register(string returnUrl1)
         {
             ViewData["ReturnUrl"] = returnUrl1;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerViewModel,string returnUrl)
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel, string returnUrl)
         {
-            ApplicationUser applicationUser = new ApplicationUser()
-            {
-                Email = registerViewModel.Email,
-                UserName = registerViewModel.Email,
-                NormalizedUserName = registerViewModel.Email
-            };
 
-            IdentityResult identityResult = await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
-            if (identityResult.Succeeded)
+            if (ModelState.IsValid)
             {
-                await _signInManager.SignInAsync(applicationUser, new AuthenticationProperties() { IsPersistent = true });
-                return RedirectToRurl(returnUrl);
+                ApplicationUser applicationUser = new ApplicationUser()
+                {
+                    Email = registerViewModel.Email,
+                    UserName = registerViewModel.Email,
+                    NormalizedUserName = registerViewModel.Email
+                };
+
+                IdentityResult identityResult = await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
+                if (identityResult.Succeeded)
+                {
+                    await _signInManager.SignInAsync(applicationUser, new AuthenticationProperties() { IsPersistent = true });
+                    return RedirectToRurl(returnUrl);
+                }
+                else
+                {
+                    ShowErrorSummary(identityResult);
+                }
             }
-
             return View();
         }
+
+
+
         public IActionResult MakeLogin()
         {
             //3.指定验证成功的方式
